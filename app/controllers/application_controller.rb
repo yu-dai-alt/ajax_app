@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  before_action :basic_auth
   class MyLogger < Logger
     include LoggerSilence
     include ActiveSupport::LoggerThreadSafeLevel
@@ -7,6 +8,12 @@ class ApplicationController < ActionController::Base
   before_action :mylogger_test
 
   private
+
+  def basic_auth
+    authenticate_or_request_with_http_basic do |username, password|
+      username == 'admin' && password == '2222'
+    end
+  end
 
   def mylogger_test
     mylogger = MyLogger.new(STDOUT)
